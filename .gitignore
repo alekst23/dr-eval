@@ -1,0 +1,15 @@
+.DS_Store
+venv/
+.venv/
+node_modules/
+__pycache__/
+.vscode/
+*.egg-info
+*.db
+
+Datasets/
+system-log.txt
+.env
+src/eval-serv/database.db
+src/eval-serv/test-database.db
+storage/
