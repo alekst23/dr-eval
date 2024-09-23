@@ -3,6 +3,8 @@ from ragas.testset.evolutions import simple, reasoning, multi_context
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from typing import Tuple, List, Dict, Any
 from datasets import Dataset
+from abc import ABC, abstractmethod
+from llama_index.core.base.response.schema import RESPONSE_TYPE
 
 from logging import getLogger
 logger = getLogger(__name__)
@@ -23,3 +25,13 @@ def generate_testset(documents: List[Dict[str, Any]], test_size: int) -> Dataset
     logger.info(f"Processing {len(documents)} documents")
     generator, embeddings = initialize_generator()
     return generator.generate_with_llamaindex_docs(documents, test_size=test_size, distributions={simple: 0.5, reasoning: 0.25, multi_context: 0.25}).to_dataset()
+
+
+class AbstractGenerator(ABC):
+    @abstractmethod
+    def __init__(self, nodes: List[Dataset]):
+        pass
+
+    @abstractmethod
+    def query(self, query: str) -> RESPONSE_TYPE:
+        pass

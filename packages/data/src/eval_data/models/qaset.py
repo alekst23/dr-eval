@@ -67,6 +67,12 @@ class QASetModel:
                                         VALUES (?, ?, ?, ?)''', (qaset.datasource_id, qaset.document_id, qaset.name, qaset.location))
             return cursor.lastrowid
 
+    def add_or_get_qaset(self, qaset: QASetType):
+        existing_qaset = self.get_qaset_by_name(qaset.name)
+        if existing_qaset:
+            return existing_qaset
+        return self.add_qaset(qaset)
+
     def get_qaset_by_id(self, qaset_id: int) -> Optional[QASetType]:
         cursor = self.db.execute('''SELECT * FROM qasets WHERE id = ?''', (qaset_id,))
         row = cursor.fetchone()

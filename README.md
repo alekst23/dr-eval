@@ -36,18 +36,24 @@ make install
 
 ## Workflow
 
+This project provides workbooks that a developer can run locally. They are designed to be run in steps and support stopping and resuming your progress.
+
 ### 1. Load and populate Q/A data set
 #### - From file
-`experiment_files.ipynb`
+`step_1a_files.ipynb`
 
 #### - From huggingface
-`experiment_data.ipynb`
+`step_1b_data.ipynb`
 
 ### 2. Perform completions
-`experiment_test.ipynb`
+`step_2_test.ipynb`
 
 ### 3. Perform evaluation
-`experiment_eval.ipynb`
+`step_3_eval.ipynb`
 
 ### 4. View the results
-`experiment_results.ipynb`
+`step_4_results.ipynb`
+
+## Integration
+
+To test your solution, you must implement the class `AbstractGenerator` from `packages/scripts/src/eval_scripts/generator.py`, then modify the file `my_generator.py` to import your implementation. This generator will then be ran as part of the process in `step_2_test.ipynb` **## - Response Generation**.

@@ -3,7 +3,7 @@ from packages.data.src.eval_data.models.document import DocumentModel, DocumentT
 from packages.data.src.eval_data.models.qaset import QASetModel, QASetType
 from packages.data.src.eval_data.models.testrun import TestRunModel, TestRunType
 
-def sog_testrun(db_connection, test_run: TestRunType) -> TestRunType:
+def add_or_get_testrun(db_connection, test_run: TestRunType) -> TestRunType:
     testrun_model = TestRunModel(db_connection)
     if test_run := testrun_model.get_test_run_by_name(test_run.description):
         return test_run
@@ -11,7 +11,7 @@ def sog_testrun(db_connection, test_run: TestRunType) -> TestRunType:
         test_run.id = testrun_model.add_test_run(test_run)
         return test_run
 
-def sog_document(db_connection, document: Document, datasource_id: int) -> DocumentType:
+def add_or_get_document(db_connection, document: Document, datasource_id: int) -> DocumentType:
     document_model = DocumentModel(db_connection)
     document_name = document.extra_info['file_name']
     doc = document_model.get_document_by_name(document_name)
@@ -29,7 +29,7 @@ def sog_document(db_connection, document: Document, datasource_id: int) -> Docum
         return new_document
     
 
-def sog_qaset(db_connection, document: Document, datasource_id: int, document_id: int):
+def add_or_get_qaset(db_connection, document: Document, datasource_id: int, document_id: int):
     qaset_model = QASetModel(db_connection)
     if qaset := qaset_model.get_qaset_by_name(document.extra_info['file_name']):
         return qaset

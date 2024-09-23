@@ -53,10 +53,18 @@ class DatasourceModel:
 
     def add_datasource(self, data: DatasourceType):
         with self.db:
-            cursor = self.self.db.execute('''INSERT INTO datasources (name, description)
+            cursor = self.db.execute('''INSERT INTO datasources (name, description)
                                         VALUES (?, ?)''', (data.name, data.description))
             return cursor.lastrowid
 
+    def add_or_get_datasource(self, data: DatasourceType):
+        """Adds a new Datasource to the database if it does not exist, otherwise returns the existing record, matching by name."""
+        existing_datasource = self.get_datasource_by_name( data.name )
+        if existing_datasource:
+            return existing_datasource
+        else:
+            data.id = self.add_datasource(data)
+            return data
 
     def get_datasource_by_id(self, datasource_id):
         cursor = self.db.execute("SELECT * FROM datasources WHERE id = ?", (datasource_id,))

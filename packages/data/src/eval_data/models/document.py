@@ -66,6 +66,13 @@ class DocumentModel:
                                         VALUES (?, ?, ?, ?)''', (document.datasource_id, document.name, document.location, document.source))
             return cursor.lastrowid
 
+    def add_or_get_document(self, document: DocumentType):
+        existing_document = self.get_document_by_name(document.name)
+        if existing_document:
+            return existing_document
+        document.id = self.add_document(document)
+        return document
+
     def get_documents_by_datasource(self, datasource_id):
         cursor = self.db.execute('''SELECT * FROM documents WHERE datasource_id = ?''', (datasource_id,))
         documents = [DocumentType.from_tuple(row) for row in cursor.fetchall()]

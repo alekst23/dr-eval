@@ -5,13 +5,14 @@ from llama_index.core.readers import SimpleDirectoryReader
 from llama_index.core.schema import Document, TextNode
 from datasets import load_dataset
 
-from packages.data.src.eval_data.models.document import DocumentModel, DocumentType
+from eval_data.models.document import DocumentModel, DocumentType
+from .embeddings import get_embeddings
 
 from logging import getLogger
 logger = getLogger(__name__)
 
 
-def load_documents(doclist: List[DocumentType]) -> List[DocumentType]:
+def load_documents(doclist: List[DocumentType]) -> List[TextNode]:
     documents = []
     for doc in doclist:
         if doc.source == "huggingface":
@@ -29,7 +30,20 @@ def load_huggingface_documents(doclist: List[DocumentType]) -> List[TextNode]:
         print(f"load_huggingface_document: {doc.location}")
         path, name = doc.location.split(";")
         doc_loader = load_dataset(path=path, name=name, streaming=True)
-        documents.extend([ TextNode(text=doc["passage"], id_=doc["id"]) for doc in doc_loader["passages"]])
+        print(f"collecting documents from {doc.location}")
+        for i, doc in enumerate(doc_loader["passages"]):
+            print(f"loading document {i}")
+            if doc["passage"]:
+                try:
+                    documents.append(
+                        TextNode(
+                            text=doc["passage"],
+                            embedding=get_embeddings(doc["passage"]),
+                            id_=str(doc["id"])
+                        ) 
+                    )
+                except Exception as e:
+                    print(f"Error loading document: {e}")
 
     return documents
 
