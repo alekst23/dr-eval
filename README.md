@@ -1,3 +1,5 @@
+<img src="static/img/dr_eval.png" alt="Dr. Eval" width="300"/>
+
 # DR EVAL
 ## Benchmarking framework for LLM systems
 
@@ -18,14 +20,17 @@ This repo provides several tools to enable the running of itterative tests on yo
 ### v0.2.0
 - postgres server with pgvector
 - database abstraction
-- docker containers
+- examples with local models
 
 ### v0.3.0
 - api server for database ops
-- front-end
+- front-end for viewing results
 
 ### v0.4.0
 - library of benchmark and evaluation functions
+
+### ... 
+- profit
 
 ## Installation
 

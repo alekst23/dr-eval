@@ -61,6 +61,8 @@ class DatasourceModel:
         """Adds a new Datasource to the database if it does not exist, otherwise returns the existing record, matching by name."""
         existing_datasource = self.get_datasource_by_name( data.name )
         if existing_datasource:
+            data.id = existing_datasource.id
+            self.update_datasource(data)
             return existing_datasource
         else:
             data.id = self.add_datasource(data)

@@ -1,12 +1,6 @@
-from transformers import AutoModel, AutoTokenizer
-import torch
+from sentence_transformers import SentenceTransformer
 
-EMBEDDING_MODEL = "google-bert/bert-base-uncased"
-model = AutoModel.from_pretrained(EMBEDDING_MODEL)
-tokenizer = AutoTokenizer.from_pretrained(EMBEDDING_MODEL)
+model = SentenceTransformer('all-MiniLM-L6-v2')  # Smaller and efficient for sentence embeddings
 
 def get_embeddings(text):
-    inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True)
-    with torch.no_grad():
-        outputs = model(**inputs)
-    return outputs.last_hidden_state.mean(dim=1).squeeze().numpy()
+    return model.encode(text).tolist()
