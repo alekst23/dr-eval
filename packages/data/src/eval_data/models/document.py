@@ -6,13 +6,15 @@ class DocumentType:
     name: str
     location: str
     source: Literal["huggingface", "file"]
+    col_text: str
 
-    def __init__(self, datasource_id: int, name: str, location: str, id: int = None, source: str = "huggingface"):
+    def __init__(self, datasource_id: int, name: str, location: str, id: int = None, source: str = "huggingface", col_text: str = ""):
         self.id = id
         self.datasource_id = datasource_id
         self.name = name
         self.location = location
         self.source = source
+        self.col_text = col_text
 
     def to_dict(self):
         return {
@@ -20,7 +22,8 @@ class DocumentType:
             'datasource_id': self.datasource_id,
             'name': self.name,
             'location': self.location,
-            'source': self.source
+            'source': self.source,
+            'col_text': self.col_text
         }
 
     @staticmethod
@@ -30,7 +33,8 @@ class DocumentType:
             datasource_id=data.get('datasource_id'),
             name=data.get('name'),
             location=data.get('location'),
-            source=data.get('source')
+            source=data.get('source'),
+            col_text=data.get('col_text')
         )
     
     @staticmethod
@@ -42,7 +46,8 @@ class DocumentType:
             datasource_id=data[1],
             name=data[2],
             location=data[3],
-            source=data[4]
+            source=data[4],
+            col_text=data[5]
         )
 
 class DocumentModel:
@@ -57,18 +62,21 @@ class DocumentModel:
                             name TEXT NOT NULL,
                             location TEXT NOT NULL,
                             source TEXT NOT NULL,
+                            col_text TEXT,
                             FOREIGN KEY(datasource_id) REFERENCES datasources(id)
                         )''')
 
     def add_document(self, document: DocumentType):
         with self.db:
-            cursor = self.db.execute('''INSERT INTO documents (datasource_id, name, location, source)
-                                        VALUES (?, ?, ?, ?)''', (document.datasource_id, document.name, document.location, document.source))
+            cursor = self.db.execute('''INSERT INTO documents (datasource_id, name, location, source, col_text)
+                                        VALUES (?, ?, ?, ?, ?)''', (document.datasource_id, document.name, document.location, document.source, document.col_text))
             return cursor.lastrowid
 
     def add_or_get_document(self, document: DocumentType):
         existing_document = self.get_document_by_name(document.name)
         if existing_document:
+            document.id = existing_document.id
+            self.update_document(document)
             return existing_document
         document.id = self.add_document(document)
         return document
@@ -85,7 +93,7 @@ class DocumentModel:
 
     def update_document(self, doc: DocumentType):
         with self.db:
-            cursor = self.db.execute('''UPDATE documents SET name = ?, location = ?, source = ? WHERE id = ?''', (doc.name, doc.location, doc.source, doc.id))
+            cursor = self.db.execute('''UPDATE documents SET datasource_id = ?, name = ?, location = ?, source = ?, col_text = ? WHERE id = ?''', (doc.datasource_id, doc.name, doc.location, doc.source, doc.col_text, doc.id))
             return cursor.rowcount > 0
 
     def get_document_by_id(self, document_id):

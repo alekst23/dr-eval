@@ -20,8 +20,6 @@ Deprecated==1.2.14
 dill==0.3.8
 dirtyjson==1.0.8
 distro==1.9.0
--e git+ssh://git@github.com/alekst23/dr-eval.git@9815e483e58b5eb880d1c013413dbf53b6bb6085#egg=eval_data&subdirectory=packages/data
--e git+ssh://git@github.com/alekst23/dr-eval.git@9815e483e58b5eb880d1c013413dbf53b6bb6085#egg=eval_scripts&subdirectory=packages/scripts
 executing==2.1.0
 filelock==3.16.1
 frozenlist==1.4.1
