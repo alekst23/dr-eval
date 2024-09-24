@@ -9,3 +9,4 @@ from .testevalconfig import TestEvalConfigModel, TestEvalConfigType
 from .testrun import TestRunModel, TestRunType
 from .context import ContextModel, ContextType
 from .evalfunction import EvalFunctionModel, EvalFunctionType
+from .embedding import EmbeddingModel, EmbeddingType

@@ -9,4 +9,4 @@ def get_embeddings(text):
     inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True)
     with torch.no_grad():
         outputs = model(**inputs)
-    return outputs.last_hidden_state.mean(dim=1).squeeze().numpy()
+    return outputs.last_hidden_state.mean(dim=1).squeeze().numpy().tolist()

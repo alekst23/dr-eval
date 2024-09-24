@@ -1,21 +1,21 @@
 import os
 from typing import List
-
+from sqlite3 import Connection
 from llama_index.core.readers import SimpleDirectoryReader
 from llama_index.core.schema import Document, TextNode
 
 from eval_data.models.document import DocumentType
-from eval_scripts.hface import load_huggingface_documents
+from eval_scripts.hface import load_huggingface_document
 
 from logging import getLogger
 logger = getLogger(__name__)
 
 
-def load_documents(doclist: List[DocumentType]) -> List[TextNode]:
+def load_documents(db: Connection, doclist: List[DocumentType]) -> List[TextNode]:
     documents = []
     for doc in doclist:
         if doc.source == "huggingface":
-            documents.extend(load_huggingface_documents([doc]))
+            documents.extend(load_huggingface_document(db, doc))
         elif doc.source == "file":
             documents.extend(load_documents_from_path(doc.location))
         else:
