@@ -1,3 +1,5 @@
+<img src="static/img/dr_eval.png" alt="Dr. Eval" width="300"/>
+
 # DR EVAL
 ## Benchmarking framework for LLM systems
 
