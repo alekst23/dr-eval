@@ -25,6 +25,9 @@ PERSIST_DIR = "./storage"
 class LlamaIndex(AbstractGenerator):
 
     def __init__(self, nodes: List[Dataset]):
+        if nodes is None or not isinstance(nodes, List) or len(nodes) == 0:
+            raise ValueError("The 'nodes' parameter must be a non-empty list of Dataset objects.")
+
         logger.info("Building llama_index query engine")
 
         # Split documents that are longer than 8192 tokens
@@ -48,17 +51,21 @@ class LlamaIndex(AbstractGenerator):
         BATCH_SIZE = 500
         for i in range(0, len(nodes), BATCH_SIZE):
             vector_store.add(nodes[i:i+BATCH_SIZE])
-    
-        # Create a new index
+
+        #Create a new index
         logger.info("Building index")
-        vector_index = VectorStoreIndex(vector_store=vector_store, node_parser=SimpleNodeParser())
+        vector_index = VectorStoreIndex(
+            nodes=nodes,
+            vector_store=vector_store,
+            node_parser=SimpleNodeParser()
+        )
 
         # Persist the index
         logger.info("Persisting index")
         vector_index.storage_context.persist(persist_dir=PERSIST_DIR)
 
         self.query_engine = vector_index.as_query_engine(similarity_top_k=3)
-        
+
 
     def load_query_engine(persist_dir=PERSIST_DIR):
         logger.info("Loading query engine")
@@ -71,6 +78,6 @@ class LlamaIndex(AbstractGenerator):
             return vector_index.as_query_engine(similarity_top_k=3)
         else:
             return None
-        
+
     def query(self, query: str) -> List[Dict[str, Any]]:
-        pass
+        return self.query_engine.query(query)
