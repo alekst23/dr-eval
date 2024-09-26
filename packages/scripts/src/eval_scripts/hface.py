@@ -2,11 +2,10 @@ from datasets import load_dataset
 from typing import List
 from sqlite3 import Connection
 from llama_index.core.schema import TextNode
-from datasets import load_dataset
-
 from eval_data.models.qaset import QASetType
 from eval_data.models.document import DocumentType
 from .database import upsert_text_node
+from .embeddings import get_embeddings
 
 from logging import getLogger
 logger = getLogger(__name__)
@@ -35,6 +34,9 @@ def load_huggingface_document(db: Connection, document: DocumentType) -> List[Te
 
     logger.info(f"collecting text nodes from {document.location}")
     nodes = []
+    texts = []
+    ids = []
+
     for i, doc in enumerate(doc_dict[list(doc_dict.keys())[0]]):
         logger.info(f"loading document {i}")
         if doc[document.col_text]:
@@ -42,14 +44,19 @@ def load_huggingface_document(db: Connection, document: DocumentType) -> List[Te
                 id = f"{document.id}_{doc[document.col_id] if document.col_id and document.col_id in doc else i}"
                 if isinstance(doc[document.col_text], list):
                     for j, text in enumerate(doc[document.col_text]):
-                        nodes.append(
-                            upsert_text_node(db, text, f"{id}_{j}")
-                        )
+                        texts.append(text)
+                        ids.append(f"{id}_{j}")
                 else:
-                    nodes.append(
-                        upsert_text_node(db, doc[document.col_text], id)
-                    )
+                    texts.append(doc[document.col_text])
+                    ids.append(id)
             except Exception as e:
                 logger.warning(f"Error loading document: {e}")
+
+    # Get embeddings for all texts in a single batch
+    embeddings = get_embeddings(texts)
+
+    # Create text nodes with embeddings
+    for text, id, embedding in zip(texts, ids, embeddings):
+        nodes.append(upsert_text_node(db, text, id, embedding))
 
     return nodes

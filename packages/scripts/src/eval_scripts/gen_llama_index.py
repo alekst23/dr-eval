@@ -7,6 +7,7 @@ from llama_index.vector_stores.chroma import ChromaVectorStore
 from llama_index.core.indices import VectorStoreIndex
 from llama_index.core.node_parser import SimpleNodeParser
 from llama_index.core.schema import TextNode
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from datasets.arrow_dataset import Dataset
 import chromadb
 
@@ -52,12 +53,16 @@ class LlamaIndex(AbstractGenerator):
         for i in range(0, len(nodes), BATCH_SIZE):
             vector_store.add(nodes[i:i+BATCH_SIZE])
 
+        # Create embedding model
+        embed_model = HuggingFaceEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2")
+
         #Create a new index
         logger.info("Building index")
         vector_index = VectorStoreIndex(
             nodes=nodes,
             vector_store=vector_store,
-            node_parser=SimpleNodeParser()
+            node_parser=SimpleNodeParser(),
+            embed_model=embed_model
         )
 
         # Persist the index
