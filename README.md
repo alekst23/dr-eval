@@ -21,6 +21,7 @@ This repo provides several tools to enable the running of itterative tests on yo
 - postgres server with pgvector
 - database abstraction
 - examples with local models
+- better batching with progress bars
 
 ### v0.3.0
 - api server for database ops

@@ -1,6 +1,5 @@
 import os
 from typing import Dict, Any, List
-import os
 from llama_index.core import StorageContext, load_index_from_storage
 from llama_index.core.indices import VectorStoreIndex
 from llama_index.vector_stores.chroma import ChromaVectorStore
@@ -8,12 +7,12 @@ from llama_index.core.indices import VectorStoreIndex
 from llama_index.core.node_parser import SimpleNodeParser
 from llama_index.core.schema import TextNode
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+#from llama_index.llms import OpenAI
 from datasets.arrow_dataset import Dataset
 import chromadb
 
 from eval_scripts.utils import chunk_documents
-from .generator import AbstractGenerator
-from .embeddings import get_embeddings
+from ..packages.scripts.src.eval_scripts.generator import AbstractGenerator
 
 
 from logging import getLogger
@@ -69,6 +68,7 @@ class LlamaIndex(AbstractGenerator):
         logger.info("Persisting index")
         vector_index.storage_context.persist(persist_dir=PERSIST_DIR)
 
+        #llm = OpenAI(model="gpt-4o-mini")
         self.query_engine = vector_index.as_query_engine(similarity_top_k=3)
 
 
