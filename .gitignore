@@ -6,6 +6,7 @@ __pycache__/
 .vscode/
 *.egg-info
 *.db
+_results/
 
 Datasets/
 system-log.txt

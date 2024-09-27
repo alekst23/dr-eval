@@ -7,8 +7,14 @@ from llama_index.core.schema import Document, TextNode
 from eval_data.models.document import DocumentType
 from eval_scripts.hface import load_huggingface_document
 
+from .embeddings import get_embeddings
+
 from logging import getLogger
 logger = getLogger(__name__)
+
+
+def empty_set() -> List[TextNode]:
+    return [TextNode(text="empty set", id_="empty-set", embedding=get_embeddings("empty set"))]
 
 
 def load_documents(db: Connection, doclist: List[DocumentType]) -> List[TextNode]:

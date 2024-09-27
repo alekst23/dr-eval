@@ -12,7 +12,7 @@ from datasets.arrow_dataset import Dataset
 import chromadb
 
 from eval_scripts.utils import chunk_documents
-from ..packages.scripts.src.eval_scripts.generator import AbstractGenerator
+from packages.scripts.src.eval_scripts.generator import AbstractGenerator
 
 
 from logging import getLogger
@@ -25,9 +25,6 @@ PERSIST_DIR = "./storage"
 class LlamaIndex(AbstractGenerator):
 
     def __init__(self, nodes: List[Dataset]):
-        if nodes is None or not isinstance(nodes, List) or len(nodes) == 0:
-            raise ValueError("The 'nodes' parameter must be a non-empty list of Dataset objects.")
-
         logger.info("Building llama_index query engine")
 
         # Split documents that are longer than 8192 tokens

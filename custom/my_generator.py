@@ -2,7 +2,7 @@ from typing import Dict, Any, List
 import os
 from datasets.arrow_dataset import Dataset
 
-from eval_scripts.gen_llama_index import LlamaIndex
+from custom.default_llama_index import LlamaIndex
 
 from logging import getLogger
 logger = getLogger(__name__)
