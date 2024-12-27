@@ -1,0 +1,3 @@
+[submodule "packages/ragtag"]
+	path = packages/ragtag
+	url = git@github.com:alekst23/rag-tag.git

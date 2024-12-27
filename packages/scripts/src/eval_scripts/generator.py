@@ -2,6 +2,7 @@ from ragas.testset.generator import TestsetGenerator
 from ragas.testset.evolutions import simple, reasoning, multi_context
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from typing import Tuple, List, Dict, Any
+from pydantic import BaseModel
 from datasets import Dataset
 from abc import ABC, abstractmethod
 from llama_index.core.base.response.schema import RESPONSE_TYPE
@@ -26,6 +27,16 @@ def generate_testset(documents: List[Dict[str, Any]], test_size: int) -> Dataset
     generator, embeddings = initialize_generator()
     return generator.generate_with_llamaindex_docs(documents, test_size=test_size, distributions={simple: 0.5, reasoning: 0.25, multi_context: 0.25}).to_dataset()
 
+# TODO: QueryReturn type
+
+class ResponseContext(BaseModel):
+    score: float
+    text: str
+
+class QueryResponse(BaseModel):
+    query: str
+    response: str
+    context: List[ResponseContext]
 
 class AbstractGenerator(ABC):
     @abstractmethod
@@ -33,5 +44,5 @@ class AbstractGenerator(ABC):
         pass
 
     @abstractmethod
-    def query(self, query: str) -> RESPONSE_TYPE:
+    def query(self, query: str) -> QueryResponse:
         pass
