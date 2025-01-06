@@ -44,6 +44,17 @@ make install
 
 This project provides workbooks that a developer can run locally. They are designed to be run in steps and support stopping and resuming your progress.
 
+We recommend that 
+### Creating a New Experiment Environment
+
+1. Make a copy of the `template` folder:
+```bash
+cp -r experiments/template experiments/<your-project-name>
+```
+2. 
+
+### Running an Experiment
+
 ### 1. Load and populate Q/A data set
 #### - From file
 `step_1a_files.ipynb`

@@ -1,15 +1,6 @@
-import os
-from typing import Dict, Any, List
-from llama_index.core import StorageContext, load_index_from_storage
-from llama_index.core.indices import VectorStoreIndex
-from llama_index.vector_stores.chroma import ChromaVectorStore
-from llama_index.core.indices import VectorStoreIndex
-from llama_index.core.node_parser import SimpleNodeParser
-from llama_index.core.schema import TextNode
-from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+from typing import List
 #from llama_index.llms import OpenAI
 from datasets.arrow_dataset import Dataset
-import chromadb
 
 from eval_scripts.utils import chunk_documents
 from packages.scripts.src.eval_scripts.generator import AbstractGenerator, QueryResponse, ResponseContext
