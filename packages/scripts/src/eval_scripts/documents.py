@@ -6,7 +6,6 @@ from llama_index.core.schema import Document, TextNode
 
 from eval_data.models.document import DocumentType
 from eval_scripts.hface import load_huggingface_document
-
 from .embeddings import get_embeddings
 
 from logging import getLogger

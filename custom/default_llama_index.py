@@ -7,7 +7,6 @@ from llama_index.core.indices import VectorStoreIndex
 from llama_index.core.node_parser import SimpleNodeParser
 from llama_index.core.schema import TextNode
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
-#from llama_index.llms import OpenAI
 from datasets.arrow_dataset import Dataset
 import chromadb
 
@@ -25,6 +24,9 @@ PERSIST_DIR = "./storage"
 class LlamaIndex(AbstractGenerator):
 
     def __init__(self, nodes: List[Dataset]):
+        if nodes is None or not isinstance(nodes, List) or len(nodes) == 0:
+            raise ValueError("The 'nodes' parameter must be a non-empty list of Dataset objects.")
+
         logger.info("Building llama_index query engine")
 
         # Split documents that are longer than 8192 tokens
